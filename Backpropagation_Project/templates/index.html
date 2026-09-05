@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>NeuralLab — Backpropagation Simulator</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+</head>
+
+
+<body>
+
+    <div class="background-grid"></div>
+
+    <div class="glow glow-one"></div>
+    <div class="glow glow-two"></div>
+
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div>
+                <div class="brand-name">
+                    Neural<span>Lab</span>
+                </div>
+
+                <div class="brand-subtitle">
+                    AI LEARNING STUDIO
+                </div>
+            </div>
+
+        </div>
+
+
+        <nav>
+
+            <a
+                href="#simulator"
+                class="active"
+            >
+                Simulator
+            </a>
+
+            <a href="#how-it-works">
+                How it works
+            </a>
+
+        </nav>
+
+
+        <div class="status-pill">
+
+            <span class="status-dot"></span>
+
+            <span id="modelStatus">
+                Model ready
+            </span>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- HERO -->
+
+    <main>
+
+        <section class="hero" id="simulator">
+
+            <div class="hero-content">
+
+                <div class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    INTERACTIVE NEURAL NETWORK
+                </div>
+
+                <h1>
+                    Backpropagation
+                    <br>
+                    <span>Simulator</span>
+                </h1>
+
+                <p>
+                    Train a neural network from scratch,
+                    watch the error decrease, and test
+                    your own data in real time.
+                </p>
+
+
+                <div class="hero-buttons">
+
+                    <button
+                        class="primary-button"
+                        onclick="scrollToTraining()"
+                    >
+                        Start training
+
+                        <span>→</span>
+                    </button>
+
+                    <button
+                        class="secondary-button"
+                        onclick="loadXOR()"
+                    >
+                        Load XOR example
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="hero-visual">
+
+                <div class="network-preview">
+
+                    <div class="preview-label">
+                        LIVE NETWORK
+                    </div>
+
+
+                    <div class="preview-network">
+
+                        <div class="preview-column">
+
+                            <div class="preview-node">
+                                X₁
+                            </div>
+
+                            <div class="preview-node">
+                                X₂
+                            </div>
+
+                        </div>
+
+
+                        <div class="preview-lines">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </div>
+
+
+                        <div class="preview-column middle">
+
+                            <div class="preview-node">
+                                1
+                            </div>
+
+                            <div class="preview-node">
+                                2
+                            </div>
+
+                            <div class="preview-node">
+                                3
+                            </div>
+
+                            <div class="preview-node">
+                                4
+                            </div>
+
+                        </div>
+
+
+                        <div class="preview-lines second">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </div>
+
+
+                        <div class="preview-column">
+
+                            <div class="preview-node output">
+                                ŷ
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="preview-footer">
+
+                        <span>2 Inputs</span>
+
+                        <span>→</span>
+
+                        <span>4 Hidden</span>
+
+                        <span>→</span>
+
+                        <span>1 Output</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- MAIN DASHBOARD -->
+
+        <section class="dashboard">
+
+
+            <!-- DATASET -->
+
+            <div class="card dataset-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <div class="card-number">
+                            01
+                        </div>
+
+                        <h2>
+                            Training dataset
+                        </h2>
+
+                        <p>
+                            Define the examples the network
+                            will learn from.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        class="small-button"
+                        onclick="addRow()"
+                    >
+                        <span>+</span>
+                        Add row
+                    </button>
+
+                </div>
+
+
+                <div class="dataset-info">
+                    Target values must be <b>0</b> or <b>1</b>.
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    #
+                                </th>
+
+                                <th>
+                                    INPUT X₁
+                                </th>
+
+                                <th>
+                                    INPUT X₂
+                                </th>
+
+                                <th>
+                                    TARGET
+                                </th>
+
+                                <th>
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="datasetBody">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <button
+                    class="reset-button"
+                    onclick="loadXOR()"
+                >
+                    ↻ Reset to XOR example
+                </button>
+
+            </div>
+
+
+
+            <!-- NETWORK -->
+
+            <div class="card network-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <div class="card-number">
+                            02
+                        </div>
+
+                        <h2>
+                            Network architecture
+                        </h2>
+
+                        <p>
+                            A simple feed-forward neural network.
+                        </p>
+
+                    </div>
+
+                    <div class="architecture-badge">
+                        2 → 4 → 1
+                    </div>
+
+                </div>
+
+
+                <div class="network-container">
+
+                    <svg
+                        id="networkSvg"
+                        viewBox="0 0 600 330"
+                        preserveAspectRatio="xMidYMid meet"
+                    >
+
+                        <!-- Connections -->
+
+                        <g class="connections">
+
+                            <!-- Input to hidden -->
+
+                            <line x1="95" y1="125" x2="285" y2="65" />
+                            <line x1="95" y1="125" x2="285" y2="130" />
+                            <line x1="95" y1="125" x2="285" y2="195" />
+                            <line x1="95" y1="125" x2="285" y2="260" />
+
+                            <line x1="95" y1="205" x2="285" y2="65" />
+                            <line x1="95" y1="205" x2="285" y2="130" />
+                            <line x1="95" y1="205" x2="285" y2="195" />
+                            <line x1="95" y1="205" x2="285" y2="260" />
+
+                            <!-- Hidden to output -->
+
+                            <line x1="315" y1="65" x2="505" y2="165" />
+                            <line x1="315" y1="130" x2="505" y2="165" />
+                            <line x1="315" y1="195" x2="505" y2="165" />
+                            <line x1="315" y1="260" x2="505" y2="165" />
+
+                        </g>
+
+
+                        <!-- Input nodes -->
+
+                        <g class="nodes">
+
+                            <circle
+                                cx="95"
+                                cy="125"
+                                r="25"
+                                class="input-node"
+                            />
+
+                            <circle
+                                cx="95"
+                                cy="205"
+                                r="25"
+                                class="input-node"
+                            />
+
+
+                            <!-- Hidden -->
+
+                            <circle
+                                cx="300"
+                                cy="65"
+                                r="22"
+                                class="hidden-node"
+                            />
+
+                            <circle
+                                cx="300"
+                                cy="130"
+                                r="22"
+                                class="hidden-node"
+                            />
+
+                            <circle
+                                cx="300"
+                                cy="195"
+                                r="22"
+                                class="hidden-node"
+                            />
+
+                            <circle
+                                cx="300"
+                                cy="260"
+                                r="22"
+                                class="hidden-node"
+                            />
+
+
+                            <!-- Output -->
+
+                            <circle
+                                cx="505"
+                                cy="165"
+                                r="28"
+                                class="output-node"
+                            />
+
+                        </g>
+
+
+                        <!-- Labels -->
+
+                        <text
+                            x="95"
+                            y="125"
+                            class="node-text"
+                        >
+                            X₁
+                        </text>
+
+                        <text
+                            x="95"
+                            y="205"
+                            class="node-text"
+                        >
+                            X₂
+                        </text>
+
+
+                        <text
+                            x="300"
+                            y="65"
+                            class="node-text"
+                        >
+                            1
+                        </text>
+
+                        <text
+                            x="300"
+                            y="130"
+                            class="node-text"
+                        >
+                            2
+                        </text>
+
+                        <text
+                            x="300"
+                            y="195"
+                            class="node-text"
+                        >
+                            3
+                        </text>
+
+                        <text
+                            x="300"
+                            y="260"
+                            class="node-text"
+                        >
+                            4
+                        </text>
+
+
+                        <text
+                            x="505"
+                            y="165"
+                            class="node-text"
+                        >
+                            ŷ
+                        </text>
+
+                    </svg>
+
+
+                    <div class="layer-labels">
+
+                        <span>INPUT LAYER</span>
+
+                        <span>HIDDEN LAYER</span>
+
+                        <span>OUTPUT</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- TRAINING -->
+
+            <div
+                class="card training-card"
+                id="training"
+            >
+
+                <div class="card-header">
+
+                    <div>
+
+                        <div class="card-number">
+                            03
+                        </div>
+
+                        <h2>
+                            Training controls
+                        </h2>
+
+                        <p>
+                            Configure how the network learns.
+                        </p>
+
+                    </div>
+
+                    <div
+                        class="training-status"
+                        id="trainingStatus"
+                    >
+                        READY
+                    </div>
+
+                </div>
+
+
+                <div class="controls-grid">
+
+                    <div class="control">
+
+                        <label>
+                            EPOCHS
+                        </label>
+
+                        <div class="input-box">
+
+                            <input
+                                type="number"
+                                id="epochs"
+                                value="10000"
+                                min="100"
+                                max="100000"
+                            >
+
+                        </div>
+
+                        <span class="control-hint">
+                            Number of learning cycles
+                        </span>
+
+                    </div>
+
+
+                    <div class="control">
+
+                        <label>
+                            LEARNING RATE
+                        </label>
+
+                        <div class="input-box">
+
+                            <input
+                                type="number"
+                                id="learningRate"
+                                value="0.1"
+                                min="0.001"
+                                max="2"
+                                step="0.01"
+                            >
+
+                        </div>
+
+                        <span class="control-hint">
+                            Step size for weight updates
+                        </span>
+
+                    </div>
+
+
+                    <div class="control train-control">
+
+                        <label>
+                            &nbsp;
+                        </label>
+
+                        <button
+                            class="train-button"
+                            id="trainButton"
+                            onclick="trainModel()"
+                        >
+
+                            <span class="button-icon">
+                                ▶
+                            </span>
+
+                            Train neural network
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- RESULTS -->
+
+            <div class="results-grid">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        %
+                    </div>
+
+                    <div>
+
+                        <span>
+                            ACCURACY
+                        </span>
+
+                        <strong id="accuracy">
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ∿
+                    </div>
+
+                    <div>
+
+                        <span>
+                            FINAL LOSS
+                        </span>
+
+                        <strong id="finalLoss">
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ↻
+                    </div>
+
+                    <div>
+
+                        <span>
+                            EPOCHS
+                        </span>
+
+                        <strong id="epochDisplay">
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ●
+                    </div>
+
+                    <div>
+
+                        <span>
+                            MODEL
+                        </span>
+
+                        <strong id="modelDisplay">
+                            READY
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- LOSS GRAPH -->
+
+            <div class="card chart-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <div class="card-number">
+                            04
+                        </div>
+
+                        <h2>
+                            Learning curve
+                        </h2>
+
+                        <p>
+                            Watch the error decrease as the network learns.
+                        </p>
+
+                    </div>
+
+                    <div class="chart-legend">
+
+                        <span class="legend-dot"></span>
+
+                        Loss
+
+                    </div>
+
+                </div>
+
+
+                <div class="chart-container">
+
+                    <canvas id="lossChart"></canvas>
+
+
+                    <div
+                        class="empty-chart"
+                        id="emptyChart"
+                    >
+
+                        <div class="empty-chart-icon">
+                            ∿
+                        </div>
+
+                        <span>
+                            Train the model to see the learning curve
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PREDICTIONS -->
+
+            <div class="card prediction-table-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <div class="card-number">
+                            05
+                        </div>
+
+                        <h2>
+                            Training predictions
+                        </h2>
+
+                        <p>
+                            Compare the network's output with the expected values.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    X₁
+                                </th>
+
+                                <th>
+                                    X₂
+                                </th>
+
+                                <th>
+                                    EXPECTED
+                                </th>
+
+                                <th>
+                                    PREDICTED
+                                </th>
+
+                                <th>
+                                    CONFIDENCE
+                                </th>
+
+                                <th>
+                                    RESULT
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="resultsBody">
+
+                            <tr>
+
+                                <td
+                                    colspan="6"
+                                    class="empty-table"
+                                >
+                                    Train the model to view predictions.
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- TEST MODEL -->
+
+            <div class="card test-card">
+
+                <div class="test-content">
+
+                    <div>
+
+                        <div class="card-number">
+                            06
+                        </div>
+
+                        <h2>
+                            Test your model
+                        </h2>
+
+                        <p>
+                            Enter new values and see what the trained
+                            network predicts.
+                        </p>
+
+                    </div>
+
+
+                    <div class="test-controls">
+
+                        <div class="test-input">
+
+                            <label>
+                                X₁
+                            </label>
+
+                            <input
+                                type="number"
+                                id="testX1"
+                                value="1"
+                                step="any"
+                            >
+
+                        </div>
+
+
+                        <div class="test-input">
+
+                            <label>
+                                X₂
+                            </label>
+
+                            <input
+                                type="number"
+                                id="testX2"
+                                value="0"
+                                step="any"
+                            >
+
+                        </div>
+
+
+                        <button
+                            class="predict-button"
+                            onclick="predictValue()"
+                        >
+                            Predict →
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="prediction-result"
+                    id="predictionResult"
+                >
+
+                    <div class="prediction-placeholder">
+
+                        <span class="prediction-dot"></span>
+
+                        Train your model, then enter values above.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- HOW IT WORKS -->
+
+            <section
+                class="how-section"
+                id="how-it-works"
+            >
+
+                <div class="section-heading">
+
+                    <div class="eyebrow">
+                        <span class="eyebrow-dot"></span>
+                        UNDER THE HOOD
+                    </div>
+
+                    <h2>
+                        How the network learns
+                    </h2>
+
+                    <p>
+                        Every training cycle follows the same
+                        fundamental process.
+                    </p>
+
+                </div>
+
+
+                <div class="process-grid">
+
+                    <div class="process-card">
+
+                        <div class="process-number">
+                            01
+                        </div>
+
+                        <h3>
+                            Forward propagation
+                        </h3>
+
+                        <p>
+                            Input values pass through the hidden
+                            layer and produce a prediction.
+                        </p>
+
+                    </div>
+
+
+                    <div class="process-card">
+
+                        <div class="process-number">
+                            02
+                        </div>
+
+                        <h3>
+                            Calculate error
+                        </h3>
+
+                        <p>
+                            The prediction is compared with the
+                            expected target using the loss function.
+                        </p>
+
+                    </div>
+
+
+                    <div class="process-card">
+
+                        <div class="process-number">
+                            03
+                        </div>
+
+                        <h3>
+                            Backpropagation
+                        </h3>
+
+                        <p>
+                            The error travels backward and determines
+                            how each weight contributed to the mistake.
+                        </p>
+
+                    </div>
+
+
+                    <div class="process-card">
+
+                        <div class="process-number">
+                            04
+                        </div>
+
+                        <h3>
+                            Update weights
+                        </h3>
+
+                        <p>
+                            Gradient descent adjusts the weights so
+                            the next prediction becomes more accurate.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <div class="footer-brand">
+            <div class="brand-name">
+                Neural<span>Lab</span>
+            </div>
+
+            <p>
+                Interactive neural network simulator
+            </p>
+        </div>
+
+
+        <div class="footer-right">
+            Manual backpropagation · Sigmoid activation · Gradient descent
+        </div>
+
+    </footer>
+
+
+    <script
+        src="{{ url_for('static', filename='script.js') }}"
+    ></script>
+
+</body>
+
+</html>
